@@ -1,0 +1,73 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Doku Demo Apss Java Library</title>
+
+    <link th:rel="stylesheet" th:href="@{../webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>List Transaksi</h1>
+        </div>
+    </div>
+    <hr>
+
+    <div class="row">
+        <div id="all-transaction">
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{../webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{../webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{../webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            url: "get-all-data",
+            contentType: "application/json",
+            success: function (result) {
+                html = "<table class='table'>" +
+                    "<tr>" +
+                    "<td>No</td>" +
+                    "<td>VA Number</td>" +
+                    "<td>howToPayApi</td>" +
+                    "<td>howToPayPage</td>" +
+                    "<td>invoiceNumber</td>" +
+                    "<td>status</td>" +
+                    "</tr>";
+
+                var i = 0
+                Array.prototype.forEach.call(result, item => {
+                    i+=1;
+                    html += "<tr>" +
+                        "<td>"+i+"</td>" +
+                        "<td>"+item.virtualAccountNumber+"</td>" +
+                        "<td>"+item.howToPayApi+"</td>" +
+                        "<td>"+item.howToPayPage+"</td>"+
+                        "<td>"+item.invoiceNumber+"</td>"+
+                        "<td>"+item.status+"</td>"+
+                        "</tr>";
+                });
+
+                html += "</table>";
+
+                $("#all-transaction").html(html);
+            },
+            error: function () {
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>
