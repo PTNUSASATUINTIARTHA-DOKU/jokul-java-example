@@ -20,25 +20,25 @@ This application will run in port 8080, you will see the Demo App:
 
 ### Setup Configuration
 
-This part is filled by data identity merchant and credential data of merchant that Jokul need. 
+This part is filled with merchant configuration that you can retrieve from [Jokul Back Office](https://jokul.doku.com/bo/login). **IMPORTANT** never use production credential for testing purpose since it will generate a real transaction.
 
 ![Alt Text](image/setup-configuration.png)
 
 ### Request Data
 
-This part is fill by customer data transaction that will proceed on Jokul.
+This part is filled with customer data transaction that will proceed on Jokul.
 
 ![Alt Text](image/request-data.png)
 
 ### Generate Paycode
 
-This page is a result of generated paycode.
+This page shows paycode generated that customers need to pay. Furthermore, you can simulate the payment through our simulator. Learn more [here](https://jokul.doku.com/docs).
 
 ![Alt Text](image/generate-paycode.png)
 
 ### Transaction List
 
-This page show is list of transaction.
+This page shows list of transaction.
 
 ![Alt Text](image/list-transaction.png)
 
