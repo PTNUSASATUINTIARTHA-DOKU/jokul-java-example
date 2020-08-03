@@ -7,34 +7,43 @@ Official Demo Application for Java Library for [Jokul Java Library](https://gith
 Java 11 or above
 
 ## Running Application
+
 Run this command :
 ```
 mvn spring-boot:run 
 ```
-This application will run in port 8080, and will show Demo :
+This application will run in port 8080, you will see the Demo App:
+
 ![Alt Text](image/dashboard.png)
 
 ## Demo Application
+
 ### Setup Configuration
-This part is filled by data identity merchant and credential data of merchant that DOKU Core need. 
+
+This part is filled by data identity merchant and credential data of merchant that Jokul need. 
+
 ![Alt Text](image/setup-configuration.png)
 
 ### Request Data
-This part is fill by customer data transaction that will proceed on DOKU Core. 
+
+This part is fill by customer data transaction that will proceed on Jokul.
+
 ![Alt Text](image/request-data.png)
 
 ### Generate Paycode
-This page is a result of generated paycode. 
+
+This page is a result of generated paycode.
+
 ![Alt Text](image/generate-paycode.png)
 
-### List Transactiion
-This page show is list of transaction. 
-![Alt Text](image/list-transaction.png)
+### Transaction List
 
-Please refer to this repo for the example project: [Jokul Java Example](https://github.com/PTNUSASATUINTIARTHA-DOKU/jokul-java-example).
+This page show is list of transaction.
+
+![Alt Text](image/list-transaction.png)
 
 ## Help and Support
 
-Got any issues? Found a bug? Have a feature requests? You can [open new issue](https://github.com/PTNUSASATUINTIARTHA-DOKU/jokul-java-library/issues/new).
+Got any issues? Found a bug? Have a feature requests? You can [open new issue](https://github.com/PTNUSASATUINTIARTHA-DOKU/jokul-java-example/issues/new).
 
 For further information, you can contact us on [care@doku.com](mailto:care@doku.com).
