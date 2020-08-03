@@ -10,8 +10,8 @@
     </parent>
     <groupId>com.doku</groupId>
     <artifactId>java-example</artifactId>
-    <version>0.0.1</version>
-    <name>demo-apps</name>
+    <version>1.0.0</version>
+    <name>java-example</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -35,8 +35,8 @@
 
         <dependency>
             <groupId>com.doku</groupId>
-            <artifactId>sdk</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <artifactId>java-library</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>
