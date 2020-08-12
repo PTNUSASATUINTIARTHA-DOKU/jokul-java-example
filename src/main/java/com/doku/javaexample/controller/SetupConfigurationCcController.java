@@ -1,8 +1,8 @@
 package com.doku.javaexample.controller;
 
 import com.doku.javaexample.dto.SetupConfigurationDto;
-import com.doku.javaexample.entity.SetupConfigurationVa;
-import com.doku.javaexample.services.va.SetupConfigurationVaServices;
+import com.doku.javaexample.entity.SetupConfigurationCc;
+import com.doku.javaexample.services.cc.SetupConfigurationCcServices;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,26 +14,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/setup-va")
-public class SetupConfigurationController {
+@RequestMapping("/setup-cc")
+public class SetupConfigurationCcController {
     @Autowired
-    SetupConfigurationVaServices setupConfigurationServices;
+    SetupConfigurationCcServices setupConfigurationCcServices;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SetupConfigurationDto> setConfiguration(@RequestBody SetupConfigurationDto setupConfigurationDto) {
 
-        SetupConfigurationVa setupConfigurationEntity = new SetupConfigurationVa();
+        SetupConfigurationCc setupConfigurationEntity = new SetupConfigurationCc();
         BeanUtils.copyProperties(setupConfigurationDto, setupConfigurationEntity);
-        setupConfigurationEntity = setupConfigurationServices.create(setupConfigurationEntity);
+        setupConfigurationEntity = setupConfigurationCcServices.create(setupConfigurationEntity);
         BeanUtils.copyProperties(setupConfigurationEntity, setupConfigurationDto);
-
         return ResponseEntity.ok(setupConfigurationDto);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SetupConfigurationDto> getDataConfiguration() {
         SetupConfigurationDto setupConfigurationDto = new SetupConfigurationDto();
-        SetupConfigurationVa setupConfigurationEntity = setupConfigurationServices.findOne();
+        SetupConfigurationCc setupConfigurationEntity = setupConfigurationCcServices.findOne();
         if (null!=setupConfigurationEntity){
             BeanUtils.copyProperties(setupConfigurationEntity, setupConfigurationDto);
         }

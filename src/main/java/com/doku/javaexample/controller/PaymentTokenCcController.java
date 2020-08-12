@@ -1,8 +1,8 @@
 package com.doku.javaexample.controller;
 
-import com.doku.javaexample.dto.GeneratePaymentCodeDto;
-import com.doku.javaexample.entity.Transaction;
-import com.doku.javaexample.services.va.GeneratePaymentCodeServices;
+import com.doku.javaexample.dto.cc.PaymentTokenRequestCusDto;
+import com.doku.javaexample.entity.TransactionCc;
+import com.doku.javaexample.services.cc.PaymentTokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,22 +10,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 
 @Controller
-public class GeneratePaymentCodeController {
+@RequestMapping("/payment-token")
+public class PaymentTokenCcController {
     @Autowired
-    GeneratePaymentCodeServices generatePaymentCodeServices;
+    PaymentTokenServices paymentTokenServices;
 
     @GetMapping()
     public String getPaycode() {
-        return "generate-paycode";
+        return "payment-token-cc";
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Transaction> generate(@RequestBody GeneratePaymentCodeDto generatePaymentCodeDto) throws IOException {
-        Transaction transaction = generatePaymentCodeServices.generate(generatePaymentCodeDto);
-        return ResponseEntity.ok(transaction);
+    public ResponseEntity<TransactionCc> generate(@RequestBody PaymentTokenRequestCusDto paymentTokenRequestDto) throws IOException {
+        return ResponseEntity.ok(paymentTokenServices.requestToken(paymentTokenRequestDto));
     }
 }

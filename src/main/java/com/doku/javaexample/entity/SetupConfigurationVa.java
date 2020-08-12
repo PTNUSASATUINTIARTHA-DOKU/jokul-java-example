@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @Entity
 @Setter
 @Getter
-public class SetupConfiguration {
+public class SetupConfigurationVa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -1,10 +1,10 @@
-package com.doku.javaexample.services;
+package com.doku.javaexample.services.va;
 
-import com.doku.sdk.dto.notify.request.NotifyRequestDto;
-import com.doku.sdk.dto.notify.response.*;
-import com.doku.javaexample.entity.SetupConfiguration;
-import com.doku.javaexample.repository.TransactionRepository;
-import com.doku.sdk.builder.EncryptBuilder;
+import com.doku.java.library.dto.va.notify.request.NotifyRequestDto;
+import com.doku.java.library.dto.va.notify.response.*;
+import com.doku.javaexample.entity.SetupConfigurationVa;
+import com.doku.javaexample.repository.va.TransactionRepository;
+import com.doku.java.library.builder.EncryptBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class NotificationServices {
     TransactionServices transactionServices;
 
     @Autowired
-    SetupConfigurationServices setupConfigurationServices;
+    SetupConfigurationVaServices setupConfigurationServices;
 
     public NotifyResponseDto notify(NotifyRequestDto notifyRequestDto) {
 
@@ -45,7 +45,7 @@ public class NotificationServices {
     }
 
     private String compareWords(NotifyRequestDto notifyRequestDto) {
-        SetupConfiguration setupConfigurationEntity = setupConfigurationServices.findOne();
+        SetupConfigurationVa setupConfigurationEntity = setupConfigurationServices.findOne();
 
         String componentWords =
                 notifyRequestDto.getClient().getId() +

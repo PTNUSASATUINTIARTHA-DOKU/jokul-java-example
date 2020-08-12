@@ -1,8 +1,8 @@
-package com.doku.javaexample.services;
+package com.doku.javaexample.services.va;
 
+import com.doku.java.library.dto.va.payment.response.PaymentCodeResponseDto;
 import com.doku.javaexample.entity.Transaction;
-import com.doku.javaexample.repository.TransactionRepository;
-import com.doku.sdk.dto.payment.response.PaymentCodeResponseDto;
+import com.doku.javaexample.repository.va.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

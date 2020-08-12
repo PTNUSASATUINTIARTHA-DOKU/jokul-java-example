@@ -1,11 +1,11 @@
-package com.doku.javaexample.services;
+package com.doku.javaexample.services.va;
 
+import com.doku.java.library.dto.va.payment.request.*;
+import com.doku.java.library.dto.va.payment.response.PaymentCodeResponseDto;
+import com.doku.java.library.service.va.VaServices;
 import com.doku.javaexample.dto.GeneratePaymentCodeDto;
-import com.doku.javaexample.entity.SetupConfiguration;
+import com.doku.javaexample.entity.SetupConfigurationVa;
 import com.doku.javaexample.entity.Transaction;
-import com.doku.sdk.dto.payment.request.*;
-import com.doku.sdk.dto.payment.response.PaymentCodeResponseDto;
-import com.doku.sdk.service.GeneratePaycodeServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +16,23 @@ import java.io.IOException;
 public class GeneratePaymentCodeServices {
 
     @Autowired
-    SetupConfigurationServices setupConfigurationServices;
+    SetupConfigurationVaServices setupConfigurationServices;
 
     @Autowired
     TransactionServices transactionServices;
 
     public Transaction generate(GeneratePaymentCodeDto generatePaymentCodeDto) throws IOException {
-        GeneratePaycodeServices generatePaycodeServices = new GeneratePaycodeServices();
+        VaServices vaServices = new VaServices();
 
-        SetupConfiguration setupConfigurationEntity = setupConfigurationServices.findOne();
+        SetupConfigurationVa setupConfigurationEntity = setupConfigurationServices.findOne();
 
-        com.doku.sdk.pojo.SetupConfiguration setupConfigurationLibrary = com.doku.sdk.pojo.SetupConfiguration
+        com.doku.java.library.pojo.SetupConfiguration setupConfigurationLibrary = com.doku.java.library.pojo.SetupConfiguration
                 .builder()
                 .clientId(setupConfigurationEntity.getClientId())
                 .merchantName(setupConfigurationEntity.getMerchantName())
                 .sharedKey(setupConfigurationEntity.getSharedKey())
-                .serverLocation(new SetupServices().getServerUrl(setupConfigurationEntity.getServerLocation()))
+                .environment("http://app-sit.doku.com/")
+                .setupServerLocation()
                 .build();
 
         PaymentCodeRequestDto paymentCodeRequestDtoLib = PaymentCodeRequestDto.builder()
@@ -57,17 +58,15 @@ public class GeneratePaymentCodeServices {
                 .generateWords()
                 .build();
 
-        return transactionServices.create(generatePaycode(generatePaymentCodeDto, generatePaycodeServices, setupConfigurationLibrary, paymentCodeRequestDtoLib));
+        return transactionServices.create(generatePaycode(generatePaymentCodeDto, vaServices, setupConfigurationLibrary, paymentCodeRequestDtoLib));
     }
 
-    private PaymentCodeResponseDto generatePaycode(GeneratePaymentCodeDto generatePaymentCodeDto, GeneratePaycodeServices generatePaycodeServices, com.doku.sdk.pojo.SetupConfiguration setupConfiguratioLibrary, PaymentCodeRequestDto paymentCodeRequestDtoLib) throws IOException {
+    private PaymentCodeResponseDto generatePaycode(GeneratePaymentCodeDto generatePaymentCodeDto, VaServices vaServices, com.doku.java.library.pojo.SetupConfiguration setupConfiguratioLibrary, PaymentCodeRequestDto paymentCodeRequestDtoLib) throws IOException {
         PaymentCodeResponseDto paymentCodeResponseDto = new PaymentCodeResponseDto();
         if ("mandiri".equals(generatePaymentCodeDto.getChannel())) {
-            paymentCodeResponseDto = generatePaycodeServices.generateMandiriPaymentCode(setupConfiguratioLibrary, paymentCodeRequestDtoLib);
+            paymentCodeResponseDto = vaServices.generateMandiriVa(setupConfiguratioLibrary, paymentCodeRequestDtoLib);
         } else if ("mandiri-syariah".equals(generatePaymentCodeDto.getChannel())) {
-            paymentCodeResponseDto = generatePaycodeServices.generateMandiriSyariahPaymentCode(setupConfiguratioLibrary, paymentCodeRequestDtoLib);
-        } else if ("bri-syariah".equals(generatePaymentCodeDto.getChannel())) {
-            paymentCodeResponseDto = generatePaycodeServices.generateMandiriSyariahPaymentCode(setupConfiguratioLibrary, paymentCodeRequestDtoLib);
+            paymentCodeResponseDto = vaServices.generateMandiriSyariahVa(setupConfiguratioLibrary, paymentCodeRequestDtoLib);
         }
 
         return paymentCodeResponseDto;

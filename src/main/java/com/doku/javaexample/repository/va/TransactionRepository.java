@@ -1,4 +1,4 @@
-package com.doku.javaexample.repository;
+package com.doku.javaexample.repository.va;
 
 import com.doku.javaexample.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;

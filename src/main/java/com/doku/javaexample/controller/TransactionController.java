@@ -2,7 +2,7 @@ package com.doku.javaexample.controller;
 
 import com.doku.javaexample.dto.TransactionDto;
 import com.doku.javaexample.entity.Transaction;
-import com.doku.javaexample.services.TransactionServices;
+import com.doku.javaexample.services.va.TransactionServices;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
