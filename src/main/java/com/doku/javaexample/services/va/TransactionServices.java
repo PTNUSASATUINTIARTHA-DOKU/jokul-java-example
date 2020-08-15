@@ -1,6 +1,7 @@
 package com.doku.javaexample.services.va;
 
 import com.doku.java.library.dto.va.payment.response.PaymentCodeResponseDto;
+import com.doku.javaexample.dto.va.PaymentCodeInboundDto;
 import com.doku.javaexample.entity.Transaction;
 import com.doku.javaexample.repository.va.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class TransactionServices {
     @Autowired
     TransactionRepository transactionRepository;
 
-    public Transaction create(PaymentCodeResponseDto paymentCodeResponseDto) {
+    public Transaction create(PaymentCodeResponseDto paymentCodeResponseDto, PaymentCodeInboundDto paymentCodeInboundDto) {
         Transaction transaction = new Transaction();
         transaction.setInvoiceNumber(paymentCodeResponseDto.getOrder().getInvoiceNumber());
         transaction.setVirtualAccountNumber(paymentCodeResponseDto.getVirtualAccountInfo().getVirtualAccountNumber());
@@ -22,6 +23,12 @@ public class TransactionServices {
         transaction.setHowToPayApi(paymentCodeResponseDto.getVirtualAccountInfo().getHowToPayApi());
         transaction.setHowToPayPage(paymentCodeResponseDto.getVirtualAccountInfo().getHowToPayPage());
         transaction.setStatus("pending");
+        transaction.setAddress(paymentCodeInboundDto.getAddress());
+        transaction.setProvince(paymentCodeInboundDto.getProvince());
+        transaction.setCountry(paymentCodeInboundDto.getCountry());
+        transaction.setPhoneNumber(paymentCodeInboundDto.getPhoneNumber());
+        transaction.setCustomerName(paymentCodeInboundDto.getCustomerName());
+        transaction.setPostalCode(paymentCodeInboundDto.getPostalCode());
         return transactionRepository.save(transaction);
     }
 

@@ -1,6 +1,6 @@
 package com.doku.javaexample.controller;
 
-import com.doku.javaexample.dto.SetupConfigurationDto;
+import com.doku.javaexample.dto.va.SetupConfigurationDto;
 import com.doku.javaexample.entity.SetupConfigurationCc;
 import com.doku.javaexample.services.cc.SetupConfigurationCcServices;
 import org.springframework.beans.BeanUtils;

@@ -12,6 +12,10 @@ public class SetupConfigurationVaServices {
     SetupConfigurationVaRepository setupConfigurationRepository;
 
     public SetupConfigurationVa create(SetupConfigurationVa setupConfiguration){
+        SetupConfigurationVa setupConfigurationVa = findOne();
+        if(null!=findOne()){
+            setupConfiguration.setId(setupConfigurationVa.getId());
+        }
         return setupConfigurationRepository.save(setupConfiguration);
     }
 

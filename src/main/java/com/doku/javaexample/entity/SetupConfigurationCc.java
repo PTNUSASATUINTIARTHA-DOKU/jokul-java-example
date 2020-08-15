@@ -18,5 +18,5 @@ public class SetupConfigurationCc {
     private String merchantName;
     private String clientId;
     private String sharedKey;
-    private String serverLocation;
+    private String environment;
 }

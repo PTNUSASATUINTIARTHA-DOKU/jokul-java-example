@@ -15,6 +15,13 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String customerName;
+    private String email;
+    private String phoneNumber;
+    private String address;
+    private String country;
+    private String province;
+    private String postalCode;
     private String virtualAccountNumber;
     private String invoiceNumber;
     private String status;

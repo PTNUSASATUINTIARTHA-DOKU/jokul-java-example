@@ -1,4 +1,4 @@
-package com.doku.javaexample.dto;
+package com.doku.javaexample.dto.va;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,5 +11,5 @@ public class SetupConfigurationDto {
     private String merchantName;
     private String clientId;
     private String sharedKey;
-    private String serverLocation;
+    private String environment;
 }
