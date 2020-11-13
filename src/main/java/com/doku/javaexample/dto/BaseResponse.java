@@ -9,6 +9,7 @@ import lombok.Setter;
 public class BaseResponse<T>{
     private String responseCode;
     private String responseMessage;
+    private String error;
     private T data;
 
     public BaseResponse<T> generateResponse(ResponseCode responseCode) {

@@ -2,8 +2,15 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Doku Demo Apss Java Library</title>
-
-    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/stylesheet/css/bootstrap.css">
+    <link rel="stylesheet"
+          href="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/stylesheet/css/main.css">
+    <script src="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/js/jquery-3.3.1.min.js"></script>
+    <!-- Popper and Bootstrap JS -->
+    <script src="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/js/popper.min.js"></script>
+    <script src="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -24,7 +31,6 @@
                 <div class="col-md-6 form-group">
                     <label>Merchant Name </label>
                     <input id="id" name="id" type="hidden" class="form-control">
-                    <input id="merchantName" name="merchantName" type="text" class="form-control">
                 </div>
                 <div class="col-md-6 form-group">
                     <label>Client Id</label>
@@ -134,10 +140,6 @@
     </div>
 </div>
 
-<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-
 
 <script>
 
@@ -145,11 +147,10 @@
     $(document).ready(function () {
         $.ajax({
             type: "GET",
-            url: "/setup-cc",
+            url: "/demo/java-library/setup-cc",
             contentType: "application/json",
             success: function (result) {
                 dataConfiguration = result;
-                $('#merchantName').val(dataConfiguration.merchantName)
                 $('#clientId').val(dataConfiguration.clientId)
                 $('#sharedKey').val(dataConfiguration.sharedKey)
                 if (null != dataConfiguration.serverLocation) {
@@ -175,7 +176,7 @@
             type: "POST",
             dataType: "JSON",
             data: JSON.stringify(indexed_array),
-            url: "/setup-cc",
+            url: "/demo/java-library/setup-cc",
             contentType: "application/json",
             success: function () {
                 location.reload();
@@ -229,7 +230,7 @@
             type: "POST",
             dataType: "JSON",
             data: JSON.stringify(data),
-            url: "/payment-token",
+            url: "/demo/java-library/payment-token",
             contentType: "application/json",
             success: function (result) {
                 window.open(result.urlPaymentPage);

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/transaction")
+@RequestMapping("/demo/java-library/transaction")
 public class TransactionController {
     @Autowired
     TransactionServices transactionServices;

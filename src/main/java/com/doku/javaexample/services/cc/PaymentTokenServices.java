@@ -35,8 +35,7 @@ public class PaymentTokenServices {
         SetupConfiguration setupConfigurationLibrary = SetupConfiguration
                 .builder()
                 .clientId(setupConfigurationEntity.getClientId())
-                .merchantName(setupConfigurationEntity.getMerchantName())
-                .sharedKey(setupConfigurationEntity.getSharedKey())
+                .key(setupConfigurationEntity.getSharedKey())
                 .environment("http://app-sit.doku.com/")
                 .setupServerLocation()
                 .build();
@@ -105,7 +104,7 @@ public class PaymentTokenServices {
                                 .getCustomer()
                                 .getName())
                         .build())
-                .sharedKey(setupConfigurationLibrary.getSharedKey())
+                .sharedKey(setupConfigurationLibrary.getKey())
                 .build();
 
         return transactionCcServices.create(ccService.generateToken(setupConfigurationLibrary, paymentTokenRequestDto));

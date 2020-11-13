@@ -1,5 +1,4 @@
-
-package com.doku.javaexample.dto.cc;
+package com.doku.javaexample.dto.va;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,12 +8,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class CustomerRequestDto {
-    private String id;
-    private String name;
-    private String email;
-    private String phone;
-    private String address;
-    private String country;
-
+public class Bank {
+    private String bankId;
+    private String  type;
+    private Integer amount;
 }

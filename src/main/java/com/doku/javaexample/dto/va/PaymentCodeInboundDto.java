@@ -15,7 +15,7 @@ public class PaymentCodeInboundDto {
     private String city;
     private String postalCode;
     private String invoiceNumber;
-    private Long amount;
+    private String amount;
     private Integer expiredTime;
     private Boolean reusableStatus;
     private String info1;

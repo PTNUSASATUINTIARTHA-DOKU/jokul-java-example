@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/setup-va")
+@RequestMapping("/demo/java-library/setup-va")
 public class SetupConfigurationController {
     @Autowired
     SetupConfigurationVaServices setupConfigurationServices;

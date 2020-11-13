@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/setup-cc")
+@RequestMapping("/demo/java-library/setup-cc")
 public class SetupConfigurationCcController {
     @Autowired
     SetupConfigurationCcServices setupConfigurationCcServices;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SetupConfigurationDto> setConfiguration(@RequestBody SetupConfigurationDto setupConfigurationDto) {
-
         SetupConfigurationCc setupConfigurationEntity = new SetupConfigurationCc();
         BeanUtils.copyProperties(setupConfigurationDto, setupConfigurationEntity);
         setupConfigurationEntity = setupConfigurationCcServices.create(setupConfigurationEntity);

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/payment-token")
+@RequestMapping("/demo/java-library/payment-token")
 public class PaymentTokenCcController {
     @Autowired
     PaymentTokenServices paymentTokenServices;
@@ -28,5 +28,10 @@ public class PaymentTokenCcController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TransactionCc> generate(@RequestBody PaymentTokenRequestCusDto paymentTokenRequestDto) throws IOException {
         return ResponseEntity.ok(paymentTokenServices.requestToken(paymentTokenRequestDto));
+    }
+
+    @GetMapping("/callback")
+    public String callback() {
+        return "callback-page";
     }
 }

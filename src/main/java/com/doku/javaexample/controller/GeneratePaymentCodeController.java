@@ -1,22 +1,26 @@
 package com.doku.javaexample.controller;
 
-import com.doku.java.library.dto.va.payment.response.PaymentCodeResponseDto;
+import com.doku.java.library.dto.va.payment.response.PaymentResponseDto;
 import com.doku.javaexample.dto.va.PaymentCodeInboundDto;
 import com.doku.javaexample.services.va.GeneratePaymentCodeServices;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 
 @Controller
+@RequestMapping("/demo/java-library")
 public class GeneratePaymentCodeController {
-    @Autowired
+    final
     GeneratePaymentCodeServices generatePaymentCodeServices;
+
+    public GeneratePaymentCodeController(GeneratePaymentCodeServices generatePaymentCodeServices) {
+        this.generatePaymentCodeServices = generatePaymentCodeServices;
+    }
 
 
     @GetMapping()
@@ -24,13 +28,9 @@ public class GeneratePaymentCodeController {
         return "generate-payment-code";
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PaymentCodeResponseDto> generate(@RequestBody PaymentCodeInboundDto generatePaymentCodeDto) throws IOException {
-        PaymentCodeResponseDto paymentCodeResponseDto = generatePaymentCodeServices.generate(generatePaymentCodeDto);
-        if (null != paymentCodeResponseDto.getError()) {
-            return ResponseEntity.status(paymentCodeResponseDto.getError().getStatusCode()).body(paymentCodeResponseDto);
-        } else {
-            return ResponseEntity.ok(paymentCodeResponseDto);
-        }
+    @PostMapping()
+    public ResponseEntity<PaymentResponseDto> generate(@RequestBody PaymentCodeInboundDto paymentCodeInboundDto) throws IOException {
+        PaymentResponseDto paymentCodeResponseDto = generatePaymentCodeServices.generate(paymentCodeInboundDto);
+        return ResponseEntity.ok(paymentCodeResponseDto);
     }
 }

@@ -32,6 +32,23 @@
     <!-- Popper and Bootstrap JS -->
     <script src="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/js/popper.min.js"></script>
     <script src="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/js/bootstrap.min.js"></script>
+    <style>
+        html, body {
+            height: 700px;
+            width: 100%;
+            margin: 0;
+        }
+
+        .h_iframe iframe {
+            height: 700px;
+            width: 100%;
+        }
+
+        .h_iframe {
+            height: 700px;
+            width: 100%;
+        }
+    </style>
 
 
 </head>
@@ -170,8 +187,7 @@
                                     <div class="col-md-12 mb-3">
                                         <label>Payment Channel</label>
                                         <select class="form-control" id="channel" name="channel" required>
-                                            <option value="mandiri" selected>Mandiri VA</option>
-                                            <option value="mandiri-syariah">Mandiri Syariah VA</option>
+                                            <option value="doku-va" selected>Doku VA</option>
                                         </select>
                                         <div class="invalid-feedback">
                                             Please select a valid country.
@@ -240,7 +256,7 @@
                                 <div class="mb-3">
                                     <label>Client ID</label>
                                     <input type="text" class="form-control dk-text-input" id="clientId" name="clientId"
-                                           placeholder="MCH-0001-10791114622547" value="MCH-0001-10791114622547"
+                                           value="MCH-1103200003"
                                            required>
                                     <div class="invalid-feedback">
                                         Client ID is required.
@@ -250,8 +266,7 @@
                                 <div class="mb-3">
                                     <label>Shared Key</label>
                                     <input type="text" class="form-control dk-text-input" id="sharedKey"
-                                           name="sharedKey"
-                                           placeholder="SK-VYIglVmWAVF28sZzku_1" value="SK-VYIglVmWAVF28sZzku_1"
+                                           name="sharedKey" value="TYUI56&*"
                                            required>
                                     <div class="invalid-feedback">
                                         Shared Key is required.
@@ -259,40 +274,16 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="address">Merchant Name</label>
-                                    <input type="text" class="form-control dk-text-input" name="merchantName"
-                                           placeholder="Toko Susu" value="Toko Susu" required>
-                                    <div class="invalid-feedback">
-                                        Merchant Name is required.
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="country">Environment</label>
+                                    <label for="environment">Environment</label>
                                     <select class="form-control" id="environment" name="environment" required>
-                                        <option value="sit" selected>SIT</option>
-                                        <option value="sandbox" selected>Sandbox</option>
+                                        <option value="http://api-sit.doku.com/" selected>SIT</option>
+                                        <option value="sandbox">Sandbox</option>
                                         <option value="production">Production</option>
                                     </select>
                                     <div class="invalid-feedback">
                                         Environment is required.
                                     </div>
                                 </div>
-
-                                <hr class="my-3">
-
-                                <h4 class="mb-3">Payment Settings</h4>
-
-                                <div class="mb-3">
-                                    <label for="address">Callback URL</label>
-                                    <input type="text" class="form-control dk-text-input" id="callback-url"
-                                           placeholder="https://merchantwebsite.com" value="https://doku.com" required>
-                                    <div class="invalid-feedback">
-                                        Merchant Name is required.
-                                    </div>
-                                </div>
-
-                                <hr class="my-3">
 
                                 <h4 class="mb-3">Virtual Account Settings</h4>
 
@@ -371,7 +362,7 @@
             type: "POST",
             dataType: "JSON",
             data: JSON.stringify(indexed_array),
-            url: "/setup-va",
+            url: "/demo/java-library/setup-va",
             contentType: "application/json",
             success: function () {
                 $('#configuration').modal('hide');
@@ -414,13 +405,13 @@
         indexed_array['channel'] = $("#channel option:selected").val();
         indexed_array['postalCode'] = $("#postalCode").val();
 
-
+        console.log(indexed_array);
 
         $.ajax({
             type: "POST",
             dataType: "JSON",
             data: JSON.stringify(indexed_array),
-            url: "/",
+            url: "/demo/java-library/",
             contentType: "application/json",
             success: function (result) {
                 console.log(result);
@@ -430,34 +421,12 @@
                     confirmButtonText: 'Close Instruction',
                     html:
                         '<h4>Your VA Number : ' + result.virtual_account_info.virtual_account_number + '</h4> ' +
-                        '<div id="content"></div>',
-                    width: 1000,
+                        '<iframe width="100%" height="700" src="'+result.virtual_account_info.how_to_pay_page+'" frameborder="0"></iframe>',
+                    width: 1500,
                 })
-                $.ajax({
-                    type: "GET",
-                    dataType: "JSON",
-                    url: result.virtual_account_info.how_to_pay_api,
-                    contentType: "application/json",
-                    success: function (resultInstruction) {
-                        let stringHeader = "<div>" +
-                            "<h3>Payment Instruction</h3>\n";
-                        let stringContent = "";
-                        resultInstruction.payment_instruction.forEach(function (paymentInstruction){
-                            stringContent = stringContent.concat("<hr><h4>"+paymentInstruction.channel+"</h4><hr>\n");
-                            let stringContentStep = "";
-                            i = 0;
-                            paymentInstruction.step.forEach(function (step){
-                                i++;
-                                stringContentStep = stringContentStep.concat("<h5>"+i+" "+step+"</h5>\n");
-                            });
-                           stringContent = stringContent+stringContentStep;
-                        });
-                        let stringFooter = "</div><hr>";
-                        $("#content").html(stringHeader+stringContent+stringFooter);
-                    }
-                });
+
             },
-            error: function (failedResponse){
+            error: function (failedResponse) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Order Failed',

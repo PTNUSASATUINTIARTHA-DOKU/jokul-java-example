@@ -8,39 +8,41 @@ Java 11 or above
 
 ## Running Application
 
-Run this command :
+Insta run with docker :
+
+at root project directory buil docker image 
+```
+docker build -t javaexample .
+```
+Run docker with this command
+```
+docker run -p 8080:8080 javaexample
+
+open  : http://localhost:8080/demo/java-library/
+```
+
+Run project with spring-boot:run 
+
+first step clone and build repository [Jokul Java Library](https://github.com/PTNUSASATUINTIARTHA-DOKU/jokul-java-library). to build mvn dependency
+
+```
+        <dependency>
+            <groupId>com.doku</groupId>
+            <artifactId>java-library</artifactId>
+            <version>2.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+```
+Run this command if already install java-library dependency in m2 local repository:
 ```
 mvn spring-boot:run 
 ```
 This application will run in port 8080, you will see the Demo App:
 
-![Alt Text](image/dashboard.png)
+## Demo Application Video
+Click the Video : <br />
 
-## Demo Application
-
-### Setup Configuration
-
-This part is filled with merchant configuration that you can retrieve from [Jokul Back Office](https://jokul.doku.com/bo/login). **IMPORTANT** never use production credential for testing purpose since it will generate a real transaction.
-
-![Alt Text](image/setup-configuration.png)
-
-### Request Data
-
-This part is filled with customer data transaction that will proceed on Jokul.
-
-![Alt Text](image/request-data.png)
-
-### Generate Paycode
-
-This page shows paycode generated that customers need to pay. Furthermore, you can simulate the payment through our simulator. Learn more [here](https://jokul.doku.com/docs).
-
-![Alt Text](image/generate-paycode.png)
-
-### Transaction List
-
-This page shows list of transaction.
-
-![Alt Text](image/list-transaction.png)
+[<img src="https://img.youtube.com/vi/FX0bcR-RN6Q/hqdefault.jpg" width="50%">](https://youtu.be/n1K80uMt358)
 
 ## Help and Support
 

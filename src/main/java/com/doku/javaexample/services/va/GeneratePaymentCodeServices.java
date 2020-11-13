@@ -1,50 +1,62 @@
 package com.doku.javaexample.services.va;
 
-import com.doku.java.library.dto.va.payment.request.*;
-import com.doku.java.library.dto.va.payment.response.PaymentCodeResponseDto;
+import com.doku.java.library.dto.va.payment.request.CustomerRequestDto;
+import com.doku.java.library.dto.va.payment.request.OrderRequestDto;
+import com.doku.java.library.dto.va.payment.request.PaymentRequestDto;
+import com.doku.java.library.dto.va.payment.request.VirtualAccountInfoRequestDto;
+import com.doku.java.library.dto.va.payment.response.PaymentResponseDto;
 import com.doku.java.library.pojo.SetupConfiguration;
 import com.doku.java.library.service.va.VaServices;
+import com.doku.javaexample.dto.va.Bank;
 import com.doku.javaexample.dto.va.PaymentCodeInboundDto;
 import com.doku.javaexample.entity.SetupConfigurationVa;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Random;
+import java.util.Arrays;
 
 
 @Service
 public class GeneratePaymentCodeServices {
 
-    @Autowired
+    final
     SetupConfigurationVaServices setupConfigurationServices;
 
-    @Autowired
+    final
     TransactionServices transactionServices;
 
-    public PaymentCodeResponseDto generate(PaymentCodeInboundDto paymentCodeInboundDto) throws IOException {
-        VaServices vaServices = new VaServices();
+
+    @Value("${env.value}")
+    String env;
+
+    public GeneratePaymentCodeServices(SetupConfigurationVaServices setupConfigurationServices, TransactionServices transactionServices) {
+        this.setupConfigurationServices = setupConfigurationServices;
+        this.transactionServices = transactionServices;
+    }
+
+    public PaymentResponseDto generate(PaymentCodeInboundDto paymentCodeInboundDto) throws IOException {
 
         SetupConfigurationVa setupConfigurationEntity = setupConfigurationServices.findOne();
 
         SetupConfiguration setupConfigurationLibrary = SetupConfiguration
                 .builder()
                 .clientId(setupConfigurationEntity.getClientId())
-                .merchantName(setupConfigurationEntity.getMerchantName())
-                .sharedKey(setupConfigurationEntity.getSharedKey())
-
-                .environment("http://app-sit.doku.com/")
-//                .environment(setupConfigurationEntity.getEnvironment())
+                .key(setupConfigurationEntity.getSharedKey())
+                .environment(setupConfigurationEntity.getEnvironment())
                 .setupServerLocation()
                 .build();
 
-        PaymentCodeRequestDto paymentCodeRequestDtoLib = PaymentCodeRequestDto.builder()
+        Bank bank = new Bank();
+        bank.setAmount(100000);
+        bank.setBankId("1");
+        bank.setType("bank");
+
+        PaymentRequestDto paymentCodeRequestDtoLib = PaymentRequestDto.builder()
                 .customer(CustomerRequestDto.builder()
                         .email(paymentCodeInboundDto.getEmail())
                         .name(paymentCodeInboundDto.getCustomerName())
-                        .build())
-                .client(ClientRequestDto.builder()
-                        .id(setupConfigurationEntity.getClientId())
                         .build())
                 .order(OrderRequestDto.builder()
                         .invoiceNumber(randomString())
@@ -57,43 +69,25 @@ public class GeneratePaymentCodeServices {
                         .info2(paymentCodeInboundDto.getInfo2())
                         .info3(paymentCodeInboundDto.getInfo3())
                         .build())
-                .sharedKey(setupConfigurationEntity.getSharedKey())
-                .generateWords()
+                .setAdditionalInfo("settlement", Arrays.asList(bank))
                 .build();
 
-        PaymentCodeResponseDto paymentCodeResponseDto = generatePaycode(paymentCodeInboundDto, vaServices, setupConfigurationLibrary, paymentCodeRequestDtoLib);
-        if (null==paymentCodeResponseDto.getError()){
-            transactionServices.create(paymentCodeResponseDto,paymentCodeInboundDto);
-        }
+        PaymentResponseDto paymentCodeResponseDto = generatePaycode(paymentCodeInboundDto, setupConfigurationLibrary, paymentCodeRequestDtoLib);
+
         return paymentCodeResponseDto;
     }
 
 
-
-    private PaymentCodeResponseDto generatePaycode(PaymentCodeInboundDto paymentCodeInboundDto, VaServices vaServices, SetupConfiguration setupConfiguratioLibrary, PaymentCodeRequestDto paymentCodeRequestDtoLib) throws IOException {
-        PaymentCodeResponseDto paymentCodeResponseDto = new PaymentCodeResponseDto();
-        if ("mandiri".equals(paymentCodeInboundDto.getChannel())) {
-            paymentCodeResponseDto = vaServices.generateMandiriVa(setupConfiguratioLibrary, paymentCodeRequestDtoLib);
-        } else if ("mandiri-syariah".equals(paymentCodeInboundDto.getChannel())) {
-            paymentCodeResponseDto = vaServices.generateMandiriSyariahVa(setupConfiguratioLibrary, paymentCodeRequestDtoLib);
+    private PaymentResponseDto generatePaycode(PaymentCodeInboundDto paymentCodeInboundDto, SetupConfiguration setupConfiguratioLibrary, PaymentRequestDto paymentRequestDto) throws IOException {
+        VaServices vaServices = new VaServices();
+        PaymentResponseDto paymentCodeResponseDto = new PaymentResponseDto();
+        if ("doku-va".equals(paymentCodeInboundDto.getChannel())) {
+            paymentCodeResponseDto = vaServices.generateDokuVa(setupConfiguratioLibrary, paymentRequestDto);
         }
         return paymentCodeResponseDto;
     }
 
-    private final String randomString(){
-        int leftLimit = 97; // letter 'a'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 20;
-        Random random = new Random();
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-        for (int i = 0; i < targetStringLength; i++) {
-            int randomLimitedInt = leftLimit + (int)
-                    (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
-        }
-
-        return buffer.toString();
+    private final String randomString() {
+        return RandomStringUtils.randomAlphanumeric(7);
     }
-
-
 }

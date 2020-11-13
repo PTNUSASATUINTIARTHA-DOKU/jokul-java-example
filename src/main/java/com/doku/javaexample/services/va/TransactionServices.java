@@ -1,6 +1,6 @@
 package com.doku.javaexample.services.va;
 
-import com.doku.java.library.dto.va.payment.response.PaymentCodeResponseDto;
+import com.doku.java.library.dto.va.payment.response.PaymentResponseDto;
 import com.doku.javaexample.dto.va.PaymentCodeInboundDto;
 import com.doku.javaexample.entity.Transaction;
 import com.doku.javaexample.repository.va.TransactionRepository;
@@ -15,13 +15,13 @@ public class TransactionServices {
     @Autowired
     TransactionRepository transactionRepository;
 
-    public Transaction create(PaymentCodeResponseDto paymentCodeResponseDto, PaymentCodeInboundDto paymentCodeInboundDto) {
+    public Transaction create(PaymentResponseDto paymentResponseDto, PaymentCodeInboundDto paymentCodeInboundDto) {
         Transaction transaction = new Transaction();
-        transaction.setInvoiceNumber(paymentCodeResponseDto.getOrder().getInvoiceNumber());
-        transaction.setVirtualAccountNumber(paymentCodeResponseDto.getVirtualAccountInfo().getVirtualAccountNumber());
-        transaction.setExpiredDate(paymentCodeResponseDto.getVirtualAccountInfo().getExpiredDate());
-        transaction.setHowToPayApi(paymentCodeResponseDto.getVirtualAccountInfo().getHowToPayApi());
-        transaction.setHowToPayPage(paymentCodeResponseDto.getVirtualAccountInfo().getHowToPayPage());
+        transaction.setInvoiceNumber(paymentResponseDto.getOrder().getInvoiceNumber());
+        transaction.setVirtualAccountNumber(paymentResponseDto.getVirtualAccountInfo().getVirtualAccountNumber());
+        transaction.setExpiredDate(paymentResponseDto.getVirtualAccountInfo().getExpiredDate());
+        transaction.setHowToPayApi(paymentResponseDto.getVirtualAccountInfo().getHowToPayApi());
+        transaction.setHowToPayPage(paymentResponseDto.getVirtualAccountInfo().getHowToPayPage());
         transaction.setStatus("pending");
         transaction.setAddress(paymentCodeInboundDto.getAddress());
         transaction.setProvince(paymentCodeInboundDto.getProvince());

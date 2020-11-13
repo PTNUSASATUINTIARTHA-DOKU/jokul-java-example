@@ -1,14 +1,21 @@
 package com.doku.javaexample.services.va;
 
-import com.doku.java.library.dto.va.notify.request.NotifyRequestDto;
+import com.doku.java.library.dto.va.notify.request.NotifyRequestBody;
+import com.doku.java.library.dto.va.notify.request.NotifyRequestHeader;
 import com.doku.java.library.dto.va.notify.response.*;
-import com.doku.javaexample.entity.SetupConfigurationVa;
+import com.doku.java.library.service.va.GenerateSignature;
+import com.doku.java.library.service.va.SignatureComponentDTO;
 import com.doku.javaexample.repository.va.TransactionRepository;
-import com.doku.java.library.builder.EncryptBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 @Service
+@Slf4j
 public class NotificationServices {
 
     @Autowired
@@ -20,45 +27,48 @@ public class NotificationServices {
     @Autowired
     SetupConfigurationVaServices setupConfigurationServices;
 
-    public NotifyResponseDto notify(NotifyRequestDto notifyRequestDto) {
+    @Value("${target-path}")
+    String targetPath;
 
-        NotifyResponseDto notifyResponseDto = null;
-        if (notifyRequestDto.getSecurity().getCheckSum().equals(compareWords(notifyRequestDto))) {
-            String virtualAccountNumber = notifyRequestDto.getVirtualAccountInfo().getVirtualAccountNumber();
-            if (null != transactionServices.findByVANumber(virtualAccountNumber)) {
-                transactionServices.updateByVANumber(virtualAccountNumber);
-                notifyResponseDto = NotifyResponseDto.builder()
-                        .client(ClientResponseDto.builder()
-                                .id(notifyRequestDto.getClient().getId()).build())
-                        .order(OrderResponseDto.builder()
-                                .amount(notifyRequestDto.getOrder().getAmount())
-                                .invoiceNumber(notifyRequestDto.getOrder().getInvoiceNumber()).build())
-                        .virtualAccountInfo(VirtualAccountInfoResponseDto.builder()
-                                .virtualAccountNumber(notifyRequestDto.getVirtualAccountInfo()
-                                        .getVirtualAccountNumber()).build())
-                        .security(SecurityResponseDto.builder().build())
-                        .build();
+    public NotifyResponseBody notify(NotifyRequestBody notifyRequestBody, NotifyRequestHeader notifyRequestHeader,String rawBody) throws NoSuchAlgorithmException, InvalidKeyException{
+
+        NotifyResponseBody notifyResponseBody = null;
+        if (notifyRequestHeader.getSignature().equals(generateSignature(notifyRequestHeader,rawBody))) {
+             notifyResponseBody = NotifyResponseBody.builder().order(
+                    OrderResponseDto.builder().
+                            amount(notifyRequestBody.getOrder().getAmount()).
+                            invoiceNumber(notifyRequestBody.getOrder().getInvoiceNumber())
+                            .build())
+                    .virtualAccountInfo(
+                            VirtualAccountInfoResponseDto.builder().
+                                    virtualAccountNumber(notifyRequestBody.getVirtualAccountInfo().getVirtualAccountNumber())
+                                    .build()).build();
+
+                    //logic merchant
+
+            log.info("vaNumber :" +notifyRequestBody.getVirtualAccountInfo().getVirtualAccountNumber());
             }
-        }
 
-        return notifyResponseDto;
+        return notifyResponseBody;
     }
 
-    private String compareWords(NotifyRequestDto notifyRequestDto) {
-        SetupConfigurationVa setupConfigurationEntity = setupConfigurationServices.findOne();
+    private String generateSignature(NotifyRequestHeader notifyRequestHeader,String rawBody) throws NoSuchAlgorithmException, InvalidKeyException {
 
-        String componentWords =
-                notifyRequestDto.getClient().getId() +
-                        notifyRequestDto.getOrder().getAmount() +
-                        notifyRequestDto.getOrder().getInvoiceNumber() +
-                        notifyRequestDto.getVirtualAccountInfo().getVirtualAccountNumber() +
-                        notifyRequestDto.getVirtualAccountPayment().getChannelCode() +
-                        notifyRequestDto.getVirtualAccountPayment().getDate() +
-                        notifyRequestDto.getVirtualAccountPayment().getReferenceNumber() +
-                        notifyRequestDto.getVirtualAccountPayment().getSystraceNumber() +
-                        setupConfigurationEntity.getSharedKey();
+        SignatureComponentDTO signatureComponentDTO = SignatureComponentDTO.builder()
+                .clientId(notifyRequestHeader.getClientId())
+                .requestId(notifyRequestHeader.getRequestId())
+                .timestamp(notifyRequestHeader.getRequestTimeStamp())
+                .requestTarget(targetPath)
+                .secretKey("SK-hCJ42G28TA0MKG9LE2E_1")
+                .messageBody(rawBody)
+                .build();
 
-        return EncryptBuilder.builder().sha256(componentWords).build().getSha256();
+        GenerateSignature generateSignature = new GenerateSignature();
+        String signatureGenerated = generateSignature.createSignatureRequest(signatureComponentDTO);
+        log.info("signature from DOku "+notifyRequestHeader.getSignature());
+        log.info("Signature generated "+signatureGenerated);
+
+        return  signatureGenerated;
     }
 
 
