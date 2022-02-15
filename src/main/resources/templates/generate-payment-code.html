@@ -187,7 +187,11 @@
                                     <div class="col-md-12 mb-3">
                                         <label>Payment Channel</label>
                                         <select class="form-control" id="channel" name="channel" required>
-                                            <option value="doku-va" selected>Doku VA</option>
+                                            <option value="doku-va" selected>DOKU VA</option>
+                                            <option value="bca-va" selected>BCA VA</option>
+                                            <option value="mandiri-va" selected>MANDIRI VA</option>
+                                            <option value="bsm-va" selected>MANDIRI SYARIAH VA</option>
+                                            <option value="permata-va" selected>PERMATA VA</option>
                                         </select>
                                         <div class="invalid-feedback">
                                             Please select a valid country.
@@ -276,9 +280,9 @@
                                 <div class="mb-3">
                                     <label for="environment">Environment</label>
                                     <select class="form-control" id="environment" name="environment" required>
-                                        <option value="http://api-sit.doku.com/" selected>SIT</option>
-                                        <option value="sandbox">Sandbox</option>
-                                        <option value="production">Production</option>
+                                        <option value="http://api-sit.doku.com" selected>SIT</option>
+                                        <option value="https://api-uat.doku.com" selected>UAT</option>
+                                        <option value="https://sandbox.doku.com">Sandbox</option>
                                     </select>
                                     <div class="invalid-feedback">
                                         Environment is required.

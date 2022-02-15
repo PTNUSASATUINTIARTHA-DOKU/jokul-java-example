@@ -83,7 +83,16 @@ public class GeneratePaymentCodeServices {
         PaymentResponseDto paymentCodeResponseDto = new PaymentResponseDto();
         if ("doku-va".equals(paymentCodeInboundDto.getChannel())) {
             paymentCodeResponseDto = vaServices.generateDokuVa(setupConfiguratioLibrary, paymentRequestDto);
-        }
+        } else if ("bca-va".equals(paymentCodeInboundDto.getChannel())) {
+            paymentCodeResponseDto = vaServices.generateBcaVa(setupConfiguratioLibrary, paymentRequestDto);
+        } else if ("mandiri-va".equals(paymentCodeInboundDto.getChannel())) {
+            paymentCodeResponseDto = vaServices.generateMandiriVa(setupConfiguratioLibrary, paymentRequestDto);
+        } else if ("bsm-va".equals(paymentCodeInboundDto.getChannel())) {
+            paymentCodeResponseDto = vaServices.generateBsmVa(setupConfiguratioLibrary, paymentRequestDto);
+        } else if ("permata-va".equals(paymentCodeInboundDto.getChannel())) {
+        paymentCodeResponseDto = vaServices.generatePermataVa(setupConfiguratioLibrary, paymentRequestDto);
+    }
+
         return paymentCodeResponseDto;
     }
 

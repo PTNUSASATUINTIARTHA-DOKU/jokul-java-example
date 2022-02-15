@@ -44,9 +44,9 @@ public class NofitifcationController {
 
         NotifyRequestBody notifyRequestBody = gson.fromJson(bodyRequest,NotifyRequestBody.class);
         log.info("Nilai Request "+bodyRequest);
-        NotifyResponseBody notifyResponseBody = notificationServices.notify(notifyRequestBody,notifyRequestHeader,bodyRequest);
+        ResponseEntity<NotifyResponseBody> notifyResponseBody = notificationServices.notify(notifyRequestBody,notifyRequestHeader,bodyRequest);
 
 
-        return ResponseEntity.ok(notifyResponseBody);
+        return notifyResponseBody;
     }
 }

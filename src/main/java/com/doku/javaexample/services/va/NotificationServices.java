@@ -9,6 +9,8 @@ import com.doku.javaexample.repository.va.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidKeyException;
@@ -29,27 +31,35 @@ public class NotificationServices {
 
     @Value("${target-path}")
     String targetPath;
+    @Value("${sharedKey}")
+    String sharedKey;
 
-    public NotifyResponseBody notify(NotifyRequestBody notifyRequestBody, NotifyRequestHeader notifyRequestHeader,String rawBody) throws NoSuchAlgorithmException, InvalidKeyException{
+    public ResponseEntity<NotifyResponseBody> notify(NotifyRequestBody notifyRequestBody, NotifyRequestHeader notifyRequestHeader, String rawBody) throws NoSuchAlgorithmException, InvalidKeyException{
 
-        NotifyResponseBody notifyResponseBody = null;
-        if (notifyRequestHeader.getSignature().equals(generateSignature(notifyRequestHeader,rawBody))) {
-             notifyResponseBody = NotifyResponseBody.builder().order(
-                    OrderResponseDto.builder().
-                            amount(notifyRequestBody.getOrder().getAmount()).
-                            invoiceNumber(notifyRequestBody.getOrder().getInvoiceNumber())
-                            .build())
-                    .virtualAccountInfo(
-                            VirtualAccountInfoResponseDto.builder().
-                                    virtualAccountNumber(notifyRequestBody.getVirtualAccountInfo().getVirtualAccountNumber())
-                                    .build()).build();
+        log.info("notify Request : "+notifyRequestBody);
+        NotifyResponseBody notifyResponseBody = NotifyResponseBody.builder().order(
+                OrderResponseDto.builder().
+                        amount(notifyRequestBody.getOrder().getAmount()).
+                        invoiceNumber(notifyRequestBody.getOrder().getInvoiceNumber())
+                        .build())
+                .virtualAccountInfo(
+                        VirtualAccountInfoResponseDto.builder().
+                                virtualAccountNumber(notifyRequestBody.getVirtualAccountInfo().getVirtualAccountNumber())
+                                .build()).build();
 
-                    //logic merchant
+        String signatureGenerated = generateSignature(notifyRequestHeader,rawBody);
+        if (!notifyRequestHeader.getSignature().equals(signatureGenerated)) {
+            //logic merchant
 
-            log.info("vaNumber :" +notifyRequestBody.getVirtualAccountInfo().getVirtualAccountNumber());
+            log.info("==== Signature Not match ====");
+            log.info("signature from DOku "+notifyRequestHeader.getSignature());
+            log.info("Signature generated "+signatureGenerated);
+
+            return new ResponseEntity<>(notifyResponseBody, HttpStatus.BAD_REQUEST);
+
             }
 
-        return notifyResponseBody;
+        return new ResponseEntity<>(notifyResponseBody, HttpStatus.OK);
     }
 
     private String generateSignature(NotifyRequestHeader notifyRequestHeader,String rawBody) throws NoSuchAlgorithmException, InvalidKeyException {
@@ -59,16 +69,13 @@ public class NotificationServices {
                 .requestId(notifyRequestHeader.getRequestId())
                 .timestamp(notifyRequestHeader.getRequestTimeStamp())
                 .requestTarget(targetPath)
-                .secretKey("SK-hCJ42G28TA0MKG9LE2E_1")
+                .secretKey(sharedKey)
                 .messageBody(rawBody)
                 .build();
 
         GenerateSignature generateSignature = new GenerateSignature();
-        String signatureGenerated = generateSignature.createSignatureRequest(signatureComponentDTO);
-        log.info("signature from DOku "+notifyRequestHeader.getSignature());
-        log.info("Signature generated "+signatureGenerated);
+        return  generateSignature.createSignatureRequest(signatureComponentDTO);
 
-        return  signatureGenerated;
     }
 
 
