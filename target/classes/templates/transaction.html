@@ -1,0 +1,94 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Doku Demo Apss Java Library</title>
+
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Payment Code</h1>
+        </div>
+    </div>
+    <hr>
+
+    <div class="row">
+        <div class="jumbotron col-md-12 text-center" id="va-instructions">
+
+        </div>
+        <a href="/transaction/get-all"> Lihat Transaksi </a>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+
+<script>
+
+    paymentCode = getUrlParameter('paymentCode');
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            url: "transaction/get-data?paymentCode=" + paymentCode,
+            contentType: "application/json",
+            success: function (result) {
+                console.log(result)
+
+                getInstruction(result)
+            },
+            error: function () {
+
+
+            }
+        });
+
+    });
+
+    function getInstruction(result) {
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            url: result.howToPayApi,
+            contentType: "application/json",
+            success: function (resultInstruction) {
+                var html = "";
+
+                Array.prototype.forEach.call(resultInstruction.payment_instruction, item => {
+                    html += "<div><h2>" + item.channel + "</h2>"
+                        + item.step + "\n"+
+                        "</div>"
+                });
+
+                $("#va-instructions").html("<h1>VA NUMBER : </h1>\n" + result.virtualAccountNumber +html);
+            },
+            error: function () {
+
+
+            }
+        });
+    }
+
+    function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+
+</script>
+
+</body>
+</html>

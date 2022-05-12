@@ -1,0 +1,245 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Doku Demo Apss Java Library</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/stylesheet/css/bootstrap.css">
+    <link rel="stylesheet"
+          href="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/stylesheet/css/main.css">
+    <script src="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/js/jquery-3.3.1.min.js"></script>
+    <!-- Popper and Bootstrap JS -->
+    <script src="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/js/popper.min.js"></script>
+    <script src="https://cdn-dev.oss-ap-southeast-5.aliyuncs.com/doku-ui-framework/doku/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <h1>Demo Apps for Generate Payment Code</h1>
+
+    </div>
+    <hr>
+
+    <div class="row">
+        <form id="formConfig" method="post">
+            <div class="form-row">
+                <div class="col-md-12 text-center">
+                    <h2>
+                        Setup Configuration
+                    </h2>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Merchant Name </label>
+                    <input id="id" name="id" type="hidden" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Client Id</label>
+                    <input id="clientId" name="clientId" type="text" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>SharedKey</label>
+                    <input id="sharedKey" name="sharedKey" type="text" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Server Environment</label>
+                    <select id="serverLocation" name="serverLocation" class="form-control">
+                        <option value="sandbox" selected="selected">SandBox</option>
+                        <option value="production">Production</option>
+                        <option value="sit">SIT</option>
+                    </select>
+                </div>
+                <button class="btn btn-info">Set Configuration</button>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <form id="formRequestData" method="post">
+            <div class="form-row">
+                <div class="col-md-12 text-center">
+                    <h2>
+                        Request Data
+                    </h2>
+                </div>
+                <h4 class="col-md-12">
+                    Customer
+                </h4>
+
+                <div class="col-md-6 form-group">
+                    <label> Id</label>
+                    <input value="1" name="customerId" type="text" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Name</label>
+                    <input value="fascal" name="customerName" type="text" class="form-control">
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Email</label>
+                    <input value="fascalsj@gmail.com" name="customerEmail" type="email" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Phone</label>
+                    <input value="33029282" name="customerPhone" type="text" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Adress</label>
+                    <input value="Jl. Sukasaari" name="customerAddress" type="text" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Country</label>
+                    <input value="ID" name="customerCountry" type="text" class="form-control">
+                </div>
+                <h4 class="col-md-12">
+                    Order
+                </h4>
+                <div class="col-md-6 form-group">
+                    <label>Amount</label>
+                    <input value="1000" name="orderAmount" type="number" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Invoice Number</label>
+                    <input value="INV-RAND" name="orderInvoiceNumber" type="text" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Currency</label>
+                    <input value="IDR" name="orderCurrency" type="text" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Callback Url</label>
+                    <input value="http:/callback.com" name="orderCallbackUrl" type="text" class="form-control">
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Line Item Name</label>
+                    <input value="ITEM PRODUCT" name="lineItemName" type="text" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Line Item Quantity</label>
+                    <input value="2" name="lineItemQuantity" type="number" class="form-control">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Line Item Price</label>
+                    <input value="30" name="lineItemPrice" type="number" class="form-control">
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Line Item Name</label>
+                    <input value="20205028095021022" name="orderCreatedDate" type="text" class="form-control">
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Line Item Name</label>
+                    <input value="SU5WFDferd561dfasfasdfaeEW62" name="orderSessionId" type="text" class="form-control">
+                </div>
+
+                <div class="col-md-12 form-group">
+                    <button class="btn btn-info">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    let dataConfiguration = null;
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/demo/java-library/setup-cc",
+            contentType: "application/json",
+            success: function (result) {
+                dataConfiguration = result;
+                $('#clientId').val(dataConfiguration.clientId)
+                $('#sharedKey').val(dataConfiguration.sharedKey)
+                if (null != dataConfiguration.serverLocation) {
+                    $('#serverLocation').val(dataConfiguration.serverLocation)
+                }
+                if (null != dataConfiguration.id) {
+                    $('#id').val(dataConfiguration.id)
+                }
+            }
+        });
+    });
+
+    $("#formConfig").submit(function (e) {
+
+        let un_index_array = $('#formConfig').serializeArray();
+        let indexed_array = {};
+
+        $.map(un_index_array, function (n) {
+            indexed_array[n['name']] = n['value'];
+        });
+
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            data: JSON.stringify(indexed_array),
+            url: "/demo/java-library/setup-cc",
+            contentType: "application/json",
+            success: function () {
+                location.reload();
+            }
+        });
+        e.preventDefault();
+        return false;
+    });
+
+
+    $("#formRequestData").submit(function (e) {
+        let un_index_array = $('#formRequestData').serializeArray();
+        let indexed_array = {};
+
+        $.map(un_index_array, function (n) {
+            indexed_array[n['name']] = n['value'];
+        });
+
+
+        var data = {
+            "customer": {
+                "date": indexed_array['createdDate'],
+                "address": indexed_array['customerAddress'],
+                "country": indexed_array['customerCountry'],
+                "email": indexed_array['customerEmail'],
+                "id": indexed_array['customerId'],
+                "name": indexed_array['customerName'],
+                "phone": indexed_array['customerPhone']
+
+            },
+            "order": {
+                "amount": parseInt(indexed_array['orderAmount']),
+                "callback_url": indexed_array['orderCallbackUrl'],
+                "currency": indexed_array['orderCurrency'],
+                "invoice_number": indexed_array['orderInvoiceNumber'],
+                "created_date": indexed_array['orderCreatedDate'],
+                "session_id": indexed_array['orderSessionId'],
+                "line_items": [
+                    {
+                        "name": indexed_array['lineItemName'],
+                        "quantity": parseInt(indexed_array['lineItemQuantity']),
+                        "price": parseInt(indexed_array['lineItemPrice'])
+                    }
+                ]
+
+            }
+        };
+
+
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            data: JSON.stringify(data),
+            url: "/demo/java-library/payment-token",
+            contentType: "application/json",
+            success: function (result) {
+                window.open(result.urlPaymentPage);
+            }
+        });
+        e.preventDefault();
+        return false;
+    });
+</script>
+
+</body>
+</html>
